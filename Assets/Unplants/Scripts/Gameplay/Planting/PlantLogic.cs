@@ -1,6 +1,6 @@
 namespace Unplants.Scripts.Gameplay.Planting
 {
-    public class Plant
+    public class PlantLogic
     {
         
     }

@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 
-namespace Assets.Unplants.Scripts.Data
+namespace Unplants.Scripts.Data.ResourcesData
 {
     [CreateAssetMenu(fileName = "EnvironmentSpriteResourceSO", menuName = "Unplants/Resources/EnvironmentSpriteResourceSO")]
-    public class EnvironmentSpriteResourceSO : MonoBehaviour, IEnvironmentSpriteResource
+    public class EnvironmentSpriteResourceSO : ScriptableObject, IEnvironmentSpriteResource
     {
         [field: SerializeField] public Sprite Sprite { get; private set; }
     }

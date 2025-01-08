@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Assets.Unplants.Scripts.Data
+namespace Unplants.Scripts.Data.ResourcesData
 {
     public interface IEnvironmentSpriteResource
     {

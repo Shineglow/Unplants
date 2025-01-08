@@ -3,7 +3,7 @@ using Unplants.Scripts.General.Extensions;
 
 namespace Unplants.Scripts.Gameplay.Planting
 {
-    public class PlantBase : MonoBehaviour, IPlantView
+    public class PlantBaseView : MonoBehaviour, IPlantView
     {
         [SerializeField] private SpriteRenderer mainSprite;
         [SerializeField] private new Animation animation;
