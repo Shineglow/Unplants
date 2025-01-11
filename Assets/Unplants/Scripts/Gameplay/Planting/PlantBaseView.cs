@@ -8,6 +8,12 @@ namespace Unplants.Scripts.Gameplay.Planting
         [SerializeField] private SpriteRenderer mainSprite;
         [SerializeField] private new Animation animation;
 
+        public bool IsVisible
+        {
+            get => gameObject.activeSelf;
+            set => gameObject.SetActive(value);
+        }
+
         private void Awake()
         {
             mainSprite.ThrowIfNull();
