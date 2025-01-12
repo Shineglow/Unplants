@@ -1,6 +1,5 @@
-﻿using Assets.Unplants.Scripts.General.Types;
-using Assets.Unplants.Scripts.General.Types.Obsrvables;
-using System;
+﻿using System;
+using Unplants.Scripts.General.Types.Observables;
 
 namespace Assets.Unplants.Scripts.Gameplay.Planting
 {

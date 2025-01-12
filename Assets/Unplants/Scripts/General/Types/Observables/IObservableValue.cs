@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Assets.Unplants.Scripts.General.Types.Obsrvables
+namespace Unplants.Scripts.General.Types.Observables
 {
     public interface IObservableValue<T>
     {

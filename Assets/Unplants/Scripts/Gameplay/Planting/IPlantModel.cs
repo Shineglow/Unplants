@@ -1,4 +1,4 @@
-﻿using Assets.Unplants.Scripts.General.Types.Obsrvables;
+﻿using Unplants.Scripts.General.Types.Observables;
 
 namespace Assets.Unplants.Scripts.Gameplay.Planting
 {

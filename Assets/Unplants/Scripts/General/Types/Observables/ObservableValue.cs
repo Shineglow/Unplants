@@ -1,9 +1,8 @@
-﻿using Assets.Unplants.Scripts.General.Types.Obsrvables;
-using System;
+﻿using System;
 
-namespace Assets.Unplants.Scripts.General.Types
+namespace Unplants.Scripts.General.Types.Observables
 {
-    public class ObservableValue<T> : IObservableValueSetter<T> where T : IComparable<T>
+    public class ObservableValue<T> : IObservableValueSetter<T>, IObservableValue<T> where T : IComparable<T>
     {
         private readonly T _value;
         public T Value
