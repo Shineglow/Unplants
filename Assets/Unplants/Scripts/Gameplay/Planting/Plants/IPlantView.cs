@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Unplants.Scripts.Gameplay.Planting
+namespace Unplants.Scripts.Gameplay.Planting.Plants
 {
     public interface IPlantView
     {

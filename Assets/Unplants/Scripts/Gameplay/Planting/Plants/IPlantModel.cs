@@ -1,8 +1,9 @@
-﻿using Unplants.Scripts.General.Types.Observables;
+﻿using System;
+using Unplants.Scripts.General.Types.Observables;
 
-namespace Assets.Unplants.Scripts.Gameplay.Planting
+namespace Unplants.Scripts.Gameplay.Planting.Plants
 {
-    internal interface IPlantModel
+    public interface IPlantModel
     {
         IObservableValue<string> Name { get; }
         IObservableValue<float> GrowthProgress { get; } // 0 .. 1, GrowthSpeed * GrowthTime / GrowthMax;

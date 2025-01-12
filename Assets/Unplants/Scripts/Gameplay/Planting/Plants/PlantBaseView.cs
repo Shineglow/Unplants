@@ -1,7 +1,7 @@
 using UnityEngine;
 using Unplants.Scripts.General.Extensions;
 
-namespace Unplants.Scripts.Gameplay.Planting
+namespace Unplants.Scripts.Gameplay.Planting.Plants
 {
     public class PlantBaseView : MonoBehaviour, IPlantView
     {

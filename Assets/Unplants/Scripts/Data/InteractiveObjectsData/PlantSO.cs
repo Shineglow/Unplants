@@ -1,10 +1,11 @@
+using System;
 using UnityEngine;
 using Unplants.Scripts.Data.ResourcesData;
 
 namespace Unplants.Scripts.Data.InteractiveObjectsData
 {
     [CreateAssetMenu(fileName = "PlantSO", menuName = "Unplants/Data/PlantSO")]
-    public class PlantSO : ScriptableObject, IPlantData
+    public class PlantSO : ScriptableObject, IPlantConfiguration
     {
         [field: SerializeField] public string InGameName { get; private set; }
         [field: SerializeField] public EPlantSizeClass SizeClass { get; private set; }

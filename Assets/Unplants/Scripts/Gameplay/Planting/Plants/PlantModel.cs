@@ -1,16 +1,18 @@
 ﻿using System;
+using UnityEngine;
 using Unplants.Scripts.General.Types.Observables;
 
-namespace Assets.Unplants.Scripts.Gameplay.Planting
+namespace Unplants.Scripts.Gameplay.Planting.Plants
 {
-    internal struct PlantModel : IPlantModel
+    [Serializable]
+    public struct PlantModel : IPlantModel
     {
-        public ObservableValue<string> NameSetter;
-        public ObservableValue<float> GrowthProgressSetter;
-        public ObservableValue<float> _growthSpeed;
-        public ObservableValue<float> _growthTime;
-        public ObservableValue<float> _growthTimeLast;
-        public ObservableValue<float> _growthMax;
+        [SerializeField] public ObservableValue<string> NameSetter;
+        [SerializeField] public ObservableValue<float> GrowthProgressSetter;
+        [SerializeField] public ObservableValue<float> _growthSpeed;
+        [SerializeField] public ObservableValue<float> _growthTime;
+        [SerializeField] public ObservableValue<float> _growthTimeLast;
+        [SerializeField] public ObservableValue<float> _growthMax;
 
         IObservableValue<string> IPlantModel.Name => NameSetter;
         IObservableValue<float> IPlantModel.GrowthProgress => GrowthProgressSetter;

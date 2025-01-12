@@ -1,10 +1,12 @@
 ﻿using System;
+using UnityEngine;
 
 namespace Unplants.Scripts.General.Types.Observables
 {
-    public class ObservableValue<T> : IObservableValueSetter<T>, IObservableValue<T> where T : IComparable<T>
+    [Serializable]
+    public struct ObservableValue<T> : IObservableValueSetter<T>, IObservableValue<T> where T : IComparable<T>
     {
-        private readonly T _value;
+        [SerializeField] private readonly T _value;
         public T Value
         {
             get => _value;
@@ -20,14 +22,11 @@ namespace Unplants.Scripts.General.Types.Observables
 
         public event Action<T> ValueChanged;
 
-        private ObservableValue() { }
-        public ObservableValue(T value)
+        public ObservableValue(T value) : this(value, null) {}
+        public ObservableValue(T value, Action<T> onValueChanged)
         {
             _value = value;
-        }
-        public ObservableValue(T value, Action<T> onValueChanged) : this(value)
-        {
-            ValueChanged += onValueChanged;
+            ValueChanged = onValueChanged;
         }
 
         public void SetAction(Action<T> newAction) => ValueChanged = newAction;
