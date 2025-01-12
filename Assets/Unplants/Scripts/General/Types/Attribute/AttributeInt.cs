@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Unity.Collections;
 
-namespace Unplants.Scripts.General.Types
+namespace Unplants.Scripts.General.Types.Attribute
 {
     public class AttributeInt
     {

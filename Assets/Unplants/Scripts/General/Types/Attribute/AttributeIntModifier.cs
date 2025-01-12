@@ -1,4 +1,4 @@
-namespace Unplants.Scripts.General.Types
+namespace Unplants.Scripts.General.Types.Attribute
 {
     public class AttributeIntModifier
     {
