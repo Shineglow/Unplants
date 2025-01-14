@@ -22,11 +22,11 @@ namespace Unplants.Scripts.Gameplay.Planting.Plants
         IObservableValue<float> IPlantModel.GrowthMax => _growthMax;
 
         public PlantModel(
-            string name, 
-            float growthProgress, 
-            float growthSpeed, 
-            float growthTime, 
-            float growthTimeLast, 
+            string name,
+            float growthProgress,
+            float growthSpeed,
+            float growthTime,
+            float growthTimeLast,
             float growthMax)
         {
             NameSetter = new ObservableValue<string>(name);

@@ -23,7 +23,7 @@ namespace Unplants.Scripts.Gameplay.Planting.Plants
         public void SetView(Sprite sprite)
         {
             sprite.ThrowIfNull();
-            
+
             mainSprite.sprite = sprite;
         }
 
