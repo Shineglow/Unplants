@@ -2,10 +2,10 @@ using UnityEngine;
 
 namespace Unplants.General.UnityAbstraction.TransformAbstraction
 {
-    public interface ITransformAbstractionSet : ITransformAbstraction
+    public interface ITransformAbstractionSet
     {
-        new Vector3 Position { get; set; }
-        new Quaternion Rotation { get; set; }
-        new Vector3 Scale { get; set; }
+        Vector3 Position { set; }
+        Quaternion Rotation { set; }
+        Vector3 Scale { set; }
     }
 }
