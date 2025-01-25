@@ -20,6 +20,13 @@ namespace Unplants.Scripts.Gameplay.Planting.Plants
             animation.ThrowIfNull();
         }
 
+        public void SetView(AnimationClip animationClip)
+        {
+            animation.ThrowIfNull();
+
+            animation.clip = animationClip;
+        }
+
         public void SetView(Sprite sprite)
         {
             sprite.ThrowIfNull();
@@ -27,11 +34,10 @@ namespace Unplants.Scripts.Gameplay.Planting.Plants
             mainSprite.sprite = sprite;
         }
 
-        public void SetView(AnimationClip animationClip)
-        {
-            animation.ThrowIfNull();
 
-            animation.clip = animationClip;
+        public void SetView(Color color)
+        {
+            mainSprite.color = color;
         }
     }
 }

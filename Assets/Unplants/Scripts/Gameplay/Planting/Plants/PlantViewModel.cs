@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Unplants.Scripts.Data.InteractiveObjectsData.Plants;
-using Unplants.Scripts.Data.ResourcesData;
 using Unplants.Scripts.General.Extensions;
+using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 namespace Unplants.Scripts.Gameplay.Planting.Plants
 {
@@ -12,7 +14,7 @@ namespace Unplants.Scripts.Gameplay.Planting.Plants
         private IPlantModel _model;
         private IPlantConfiguration _configuration;
 
-        private readonly List<Action<IPlantConfiguration, float>> _actions;
+        private readonly List<Func<IPlantConfiguration, float, bool>> _actions;
         private readonly GrowthViewProgress _growthViewProgress;
 
         public PlantViewModel(IPlantView view, IPlantModel model, IPlantConfiguration configuration)
@@ -29,27 +31,49 @@ namespace Unplants.Scripts.Gameplay.Planting.Plants
             model.GrowthProgress.ValueChanged += OnGrowthProgressUpdated;
             _actions = new()
             {
-                (clip, progress) => ProcessAnimationClip(clip.StageToData, progress),
-                (cfg, progress) => ),
-                (cfg, progress) => growthViewProgress.Process((IStageToData<IEnvironmentAnimationResource>)cfg, progress, () => {
-                    
-                }),
-                (cfg, progress) => growthViewProgress.Process((IStageToData<IEnvironmentAnimationResource>)cfg, progress, () => {
-                    
-                }),
+                (cfg, progress) => ProcessAnimationClip(cfg, progress),
+                (cfg, progress) => ProcessSprite(cfg, progress),
+                (cfg, progress) => ProcessColor(cfg, progress),
             };
         }
 
-        private void ProcessAnimationClip(IGrowthStageToData<IStageToData<IEnvironmentAnimationResource>> clip, float progress)
+        private bool ProcessAnimationClip(IGrowthStageToAnimationClip clip, float progress)
         {
-            _growthViewProgress.Process(clip, progress, data => {
-                    
-            });
+            return false;
+            // TODO: Add realization, before first animation was added
         }
 
-        private void OnGrowthProgressUpdated(float newValue)
+        private bool ProcessSprite(IGrowthStageToSprite clip, float progress)
         {
-            _actions.);
+            return false;
+            // TODO: Add realization, before first sprites set was added
+        }
+
+        private bool ProcessColor(IGrowthStageToColorChange clip, float progress)
+        {
+            for (int i = clip.StageToData.Count-1; i > -1; i--)
+            {
+                GrowthStageToColorChange item = clip.StageToData[i];
+                if(item.GrowthStage <= progress)
+                {
+                    _view.SetView(item.Data);
+                    return true;
+                }
+            }
+
+            Debug.LogError("Growth progress out of range!");
+            return false;
+        }
+
+        private void OnGrowthProgressUpdated(float obj)
+        {
+            for (int i = 0; i < _actions.Count; i++)
+            {
+                if (_actions[i].Invoke(_configuration, obj))
+                {
+                    return;
+                }
+            }
         }
     }
 }

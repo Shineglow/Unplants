@@ -1,6 +1,6 @@
 namespace Unplants.Scripts.Data.InteractiveObjectsData.Plants
 {
-    public interface IGrowthStageToColorChange : IGrowthStageToData<IGrowthStageToColorChange>
+    public interface IGrowthStageToColorChange : IGrowthStageToData<GrowthStageToColorChange>
     {
     }
 }
