@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Unplants.General.UnityAbstraction.TransformAbstraction
 {
@@ -14,6 +15,9 @@ namespace Unplants.General.UnityAbstraction.TransformAbstraction
 
         public TransformAbstractionBase(Transform transform)
         {
+            if (transform == null)
+                throw new NullReferenceException($"Trying to initialize {nameof(TransformAbstractionBase)} object with null value of {nameof(transform)} parameter!");
+
             _transform = transform;
         }
     }
