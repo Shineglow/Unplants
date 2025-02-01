@@ -1,20 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace Unplants.General.Systems.DragDropSystem
 {
-    public sealed class DragDropSystemBase : IDragDropSystem<IDragDropListener>
+    public sealed class DragDropSystemBase : IDragDropSystem<IDragListener>
     {
-        private HashSet<IDragDropListener> _items;
+        private Physics2DRaycaster _physics2DRaycaster;
+
+        private HashSet<IDragListener> _items;
         private Vector2 _pointerDownPos;
 
         public DragDropSystemBase() 
         {
-            _items = new HashSet<IDragDropListener>();
+            _items = new HashSet<IDragListener>();
         }
 
-        public void Add(IDragDropListener item)
+        public void Add(IDragListener item)
         {
             _items.Add(item);
             item.PointerDown += OnPointerDown;
@@ -24,24 +27,43 @@ namespace Unplants.General.Systems.DragDropSystem
             item.DragEnd += OnDragEnd;
         }
 
-        public void Remove(IDragDropListener item)
+        public void Remove(IDragListener item)
         {
             _items.Remove(item);
-            item.PointerDown += OnPointerDown;
-            item.PointerUp += OnPointerUp;
-            item.DragBegin += OnDragBegin;
-            item.Drag += OnDrag;
-            item.DragEnd += OnDragEnd;
+            item.PointerDown -= OnPointerDown;
+            item.PointerUp -= OnPointerUp;
+            item.DragBegin -= OnDragBegin;
+            item.Drag -= OnDrag;
+            item.DragEnd -= OnDragEnd;
         }
 
         private void OnDragEnd(IDragDropItem item, IPointerData data)
         {
-            throw new NotImplementedException();
+            PointerEventData eventData = new(EventSystem.current);
+            eventData.position = data.PointerPos;
+            eventData.displayIndex = data.DisplayIndex;
+
+            List<RaycastResult> raycastResults = new();
+            _physics2DRaycaster.Raycast(eventData, raycastResults);
+
+            if (raycastResults.Count == 0)
+                return;
+
+            for (int i = 0; i < raycastResults.Count; i++)
+            {
+                if(raycastResults[i].gameObject.TryGetComponent<IDropListener<IDragDropItem>>(out var listener))
+                {
+                    if (listener.Drop(item))
+                    {
+                        break;
+                    }
+                }
+            }
         }
 
         private void OnDrag(IDragDropItem item, IPointerData data)
         {
-            item.TransformAbstraction.Position = data.PointerPos - _pointerDownPos;
+            item.TransformAbstraction.position = data.PointerPos - _pointerDownPos;
         }
 
         private void OnDragBegin(IDragDropItem item, IPointerData data)

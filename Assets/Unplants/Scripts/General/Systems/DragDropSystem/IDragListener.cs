@@ -2,7 +2,7 @@
 
 namespace Unplants.General.Systems.DragDropSystem
 {
-    public interface IDragDropListener
+    public interface IDragListener
     {
         event Action<IDragDropItem, IPointerData> PointerDown;
         event Action<IDragDropItem, IPointerData> PointerUp;

@@ -1,9 +1,9 @@
-﻿using Unplants.General.UnityAbstraction.TransformAbstraction;
+﻿using UnityEngine;
 
 namespace Unplants.General.Systems.DragDropSystem
 {
     public interface IDragDropItem
     {
-        ITransformAbstraction TransformAbstraction { get; }
+        Transform TransformAbstraction { get; }
     }
 }

@@ -1,7 +1,9 @@
 {
     "name": "Systems",
     "rootNamespace": "Unplants.General.Systems",
-    "references": [],
+    "references": [
+        "GUID:381e15fc0c405fa42942f7b8a9494970"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
