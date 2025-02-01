@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using Unplants.Scripts.Data.InteractiveObjectsData.Plants;
 using Unplants.Scripts.General.Extensions;
-using UnityEngine;
 using Debug = UnityEngine.Debug;
 
 namespace Unplants.Scripts.Gameplay.Planting.Plants
