@@ -1,10 +1,9 @@
-﻿using UnityEngine;
+﻿using Unplants.General.UnityAbstraction.TransformAbstraction;
 
 namespace Unplants.General.Systems.DragDropSystem
 {
     public interface IDragDropItem
     {
-        public Vector3 Position { get; set; }
-        public Vector3 Scale { get; set; }
+        ITransformAbstraction TransformAbstraction { get; }
     }
 }
