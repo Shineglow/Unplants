@@ -1,20 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-using UnityEngine.EventSystems;
+using Unplants.General.Systems.EventSystemAbstraction;
 
 namespace Unplants.General.Systems.DragDropSystem
 {
     public sealed class DragDropSystemBase : IDragDropSystem<IDragListener>
     {
-        private Physics2DRaycaster _physics2DRaycaster;
-
         private HashSet<IDragListener> _items;
+        private IRaycasterAbstraction<GameObject> _raycaster;
         private Vector2 _pointerDownPos;
 
-        public DragDropSystemBase() 
+        public DragDropSystemBase(IRaycasterAbstraction<GameObject> raycaster) 
         {
             _items = new HashSet<IDragListener>();
+            _raycaster = raycaster;
         }
 
         public void Add(IDragListener item)
@@ -39,19 +40,14 @@ namespace Unplants.General.Systems.DragDropSystem
 
         private void OnDragEnd(IDragDropItem item, IPointerData data)
         {
-            PointerEventData eventData = new(EventSystem.current);
-            eventData.position = data.PointerPos;
-            eventData.displayIndex = data.DisplayIndex;
+            var raycastResults = _raycaster.GetObjectUnderMouse(data);
 
-            List<RaycastResult> raycastResults = new();
-            _physics2DRaycaster.Raycast(eventData, raycastResults);
-
-            if (raycastResults.Count == 0)
+            if (raycastResults.Count() == 0)
                 return;
 
-            for (int i = 0; i < raycastResults.Count; i++)
+            foreach (var go in raycastResults)
             {
-                if(raycastResults[i].gameObject.TryGetComponent<IDropListener<IDragDropItem>>(out var listener))
+                if(go.TryGetComponent<IDropListener<IDragDropItem>>(out var listener))
                 {
                     if (listener.Drop(item))
                     {
