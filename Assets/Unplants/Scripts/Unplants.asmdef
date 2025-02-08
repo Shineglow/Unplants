@@ -2,7 +2,8 @@
     "name": "Unplants",
     "rootNamespace": "Unplants",
     "references": [
-        "Unity.Collections"
+        "Unity.Collections",
+        "Systems"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
