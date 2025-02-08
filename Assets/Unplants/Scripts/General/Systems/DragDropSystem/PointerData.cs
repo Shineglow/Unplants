@@ -6,5 +6,6 @@ namespace Unplants.General.Systems.DragDropSystem
     {
         public Vector2 PointerPos { get; set; }
         public int DisplayIndex { get; set; }
+        public Vector2 PointerDelta { get; set; }
     }
 }

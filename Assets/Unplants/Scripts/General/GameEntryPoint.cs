@@ -4,6 +4,7 @@ using UnityEngine.EventSystems;
 using Unplants.General.Systems.DragDropSystem;
 using Unplants.General.Systems.EventSystemAbstraction;
 using Unplants.Scripts.Gameplay.Planting.Plants;
+using Unplants.Scripts.Gameplay.Systems;
 
 namespace Unplants
 {
@@ -13,14 +14,14 @@ namespace Unplants
         [SerializeField] private Physics2DRaycaster physics2DRaycaster;
 
         private IRaycasterAbstraction<GameObject> _raycaster2D;
-        private DragDropSystemBase _dragDropSystem;
+        private DragDropSystemBase<IDragListener> _dragDropSystem;
 
         private List<PlantBaseView> draggablePlants;
 
         void Start()
         {
             _raycaster2D = new RaycasterAbstractionBase(eventSystem, physics2DRaycaster);
-            _dragDropSystem = new DragDropSystemBase(_raycaster2D);
+            _dragDropSystem = new PlantDragDropSystem(_raycaster2D, Camera.main);
             foreach (var item in draggablePlants)
             {
                 _dragDropSystem.Add(item);
