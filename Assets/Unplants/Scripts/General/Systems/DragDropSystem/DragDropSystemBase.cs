@@ -5,19 +5,19 @@ using Unplants.General.Systems.EventSystemAbstraction;
 
 namespace Unplants.General.Systems.DragDropSystem
 {
-    public abstract class DragDropSystemBase<T> : IDragDropSystem<T> where T : IDragListener
+    public abstract class DragDropSystemBase<T1, T2> : IDragDropSystem<T1, T2> where T1 : IDragListener<T2> where T2 : IDragDropItem
     {
-        private HashSet<T> _items;
+        private HashSet<T1> _items;
         protected IRaycasterAbstraction<GameObject> _raycaster { get; private set; }
         protected Vector2 _pointerDownPos;
 
         public DragDropSystemBase(IRaycasterAbstraction<GameObject> raycaster) 
         {
-            _items = new HashSet<T>();
+            _items = new HashSet<T1>();
             _raycaster = raycaster;
         }
 
-        public void Add(T item)
+        public void Add(T1 item)
         {
             _items.Add(item);
             item.PointerDown += OnPointerDown;
@@ -28,7 +28,7 @@ namespace Unplants.General.Systems.DragDropSystem
             ItemAdded(item);
         }
 
-        public void Remove(T item)
+        public void Remove(T1 item)
         {
             _items.Remove(item);
             item.PointerDown -= OnPointerDown;
@@ -39,7 +39,7 @@ namespace Unplants.General.Systems.DragDropSystem
             ItemRemoved(item);
         }
 
-        protected virtual void OnDragEnd(IDragDropItem item, IPointerData data)
+        protected virtual void OnDragEnd(T2 item, IPointerData data)
         {
             var raycastResults = _raycaster.GetObjectUnderMouse(data);
 
@@ -58,15 +58,15 @@ namespace Unplants.General.Systems.DragDropSystem
             }
         }
 
-        protected abstract void OnDrag(IDragDropItem item, IPointerData data);
+        protected abstract void OnDrag(T2 item, IPointerData data);
 
-        protected virtual void OnDragBegin(IDragDropItem item, IPointerData data) { }
+        protected virtual void OnDragBegin(T2 item, IPointerData data) { }
 
-        protected virtual void OnPointerUp(IDragDropItem item, IPointerData data) { }
+        protected virtual void OnPointerUp(T2 item, IPointerData data) { }
 
-        protected virtual void OnPointerDown(IDragDropItem item, IPointerData data) { }
+        protected virtual void OnPointerDown(T2 item, IPointerData data) { }
 
-        protected virtual void ItemAdded(T item) { }
-        protected virtual void ItemRemoved(T item) { }
+        protected virtual void ItemAdded(T1 item) { }
+        protected virtual void ItemRemoved(T1 item) { }
     }
 }

@@ -4,6 +4,6 @@ namespace Unplants.General.Systems.DragDropSystem
 {
     public interface IDragDropItem
     {
-        Transform TransformAbstraction { get; }
+        Transform Transform { get; }
     }
 }

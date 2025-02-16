@@ -14,18 +14,15 @@ namespace Unplants
         [SerializeField] private Physics2DRaycaster physics2DRaycaster;
 
         private IRaycasterAbstraction<GameObject> _raycaster2D;
-        private DragDropSystemBase<IDragListener> _dragDropSystem;
+        private DragDropSystemBase<IDragListener<IDragDropItem>, IDragDropItem> _dragDropSystem;
 
-        private List<PlantBaseView> draggablePlants;
+        [SerializeField] private List<PlantBaseView> draggablePlants;
 
         void Start()
         {
             _raycaster2D = new RaycasterAbstractionBase(eventSystem, physics2DRaycaster);
             _dragDropSystem = new PlantDragDropSystem(_raycaster2D, Camera.main);
-            foreach (var item in draggablePlants)
-            {
-                _dragDropSystem.Add(item);
-            }
+            
         }
     }
 }

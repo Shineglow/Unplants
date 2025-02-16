@@ -19,7 +19,7 @@ namespace Unplants.General.Systems.EventSystemAbstraction
 
         public IEnumerable<GameObject> GetObjectUnderMouse(IPointerData data)
         {
-            _pointerEventData.position = data.PointerPos;
+            _pointerEventData.position = data.PointerScreenPos;
             _pointerEventData.displayIndex = data.DisplayIndex;
 
             List<RaycastResult> raycastResults = new();

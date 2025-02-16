@@ -4,7 +4,7 @@ using Unplants.General.Systems.EventSystemAbstraction;
 
 namespace Unplants.Scripts.Gameplay.Systems
 {
-    public class PlantDragDropSystem : DragDropSystemBase<IDragListener>
+    public class PlantDragDropSystem : DragDropSystemBase<IDragListener<IDragDropItem>, IDragDropItem>
     {
         private Camera _camera;
 
@@ -15,7 +15,14 @@ namespace Unplants.Scripts.Gameplay.Systems
 
         protected override void OnDrag(IDragDropItem item, IPointerData data)
         {
-            _camera.WorldToViewportPoint(item.TransformAbstraction.position);
+            MovingItem(item, data);
+        }
+
+        private void MovingItem(IDragDropItem item, IPointerData data)
+        {
+            var pointerWorldPosition = _camera.ScreenToWorldPoint(data.PointerScreenPos);
+            pointerWorldPosition.z = 0;
+            item.Transform.position += pointerWorldPosition - item.Transform.position;
         }
     }
 }

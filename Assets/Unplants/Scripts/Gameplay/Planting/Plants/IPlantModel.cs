@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Unplants.General.Systems.DragDropSystem;
 using Unplants.Scripts.General.Types.Observables;
 
 namespace Unplants.Scripts.Gameplay.Planting.Plants
 {
-    public interface IPlantModel
+    public interface IPlantModel : IDragDropItem
     {
         IObservableValue<string> Name { get; }
         IObservableValue<float> GrowthProgress { get; } // 0 .. 1, GrowthSpeed * GrowthTime / GrowthMax;

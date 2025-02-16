@@ -6,6 +6,7 @@ namespace Unplants.Scripts.Data.InteractiveObjectsData.Plants
     [CreateAssetMenu(fileName = "PlantSO", menuName = "Unplants/Data/PlantSO")]
     public class PlantSO : ScriptableObject, IPlantConfiguration
     {
+        [field: SerializeField] public EPlant PlantType { get; set; }
         [field: SerializeField] public string InGameName { get; private set; }
         [field: SerializeField] public EPlantSizeClass SizeClass { get; private set; }
         [field: SerializeField] public float TimeToGrowth { get; private set; }

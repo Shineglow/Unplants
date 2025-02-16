@@ -21,8 +21,11 @@ namespace Unplants.Scripts.Gameplay.Planting.Plants
         IObservableValue<float> IPlantModel.GrowthTimeLast => _growthTimeLast;
         IObservableValue<float> IPlantModel.GrowthMax => _growthMax;
 
+        public Transform Transform { get; }
+
         public PlantModel(
             string name,
+            Transform viewTransform,
             float growthProgress,
             float growthSpeed,
             float growthTime,
@@ -30,6 +33,7 @@ namespace Unplants.Scripts.Gameplay.Planting.Plants
             float growthMax)
         {
             NameSetter = new ObservableValue<string>(name);
+            Transform = viewTransform;
             GrowthProgressSetter = new ObservableValue<float>(growthProgress);
             _growthSpeed = new ObservableValue<float>(growthSpeed);
             _growthTime = new ObservableValue<float>(growthTime);

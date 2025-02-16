@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
+using Unplants.General.Systems.DragDropSystem;
 using Unplants.Scripts.Data.InteractiveObjectsData.Plants;
 using Unplants.Scripts.General.Extensions;
 using Debug = UnityEngine.Debug;
 
 namespace Unplants.Scripts.Gameplay.Planting.Plants
 {
-    public class PlantViewModel : IPlantViewModel
+    public class PlantViewModel : IPlantViewModel, IDragListener<IDragDropItem>
     {
         private IPlantView _view;
         private IPlantModel _model;
@@ -14,6 +15,12 @@ namespace Unplants.Scripts.Gameplay.Planting.Plants
 
         private readonly List<Func<IPlantConfiguration, float, bool>> _actions;
         private readonly GrowthViewProgress _growthViewProgress;
+
+        public event Action<IDragDropItem, IPointerData> PointerDown;
+        public event Action<IDragDropItem, IPointerData> PointerUp;
+        public event Action<IDragDropItem, IPointerData> DragBegin;
+        public event Action<IDragDropItem, IPointerData> Drag;
+        public event Action<IDragDropItem, IPointerData> DragEnd;
 
         public PlantViewModel(IPlantView view, IPlantModel model, IPlantConfiguration configuration)
         {
@@ -33,6 +40,12 @@ namespace Unplants.Scripts.Gameplay.Planting.Plants
                 (cfg, progress) => ProcessSprite(cfg, progress),
                 (cfg, progress) => ProcessColor(cfg, progress),
             };
+
+            view.PointerDown += OnPointerDown;
+            view.PointerUp += OnPointerUp;
+            view.DragBegin += OnDragBegin;
+            view.Drag += OnDrag;
+            view.DragEnd += OnDragEnd;
         }
 
         private bool ProcessAnimationClip(IGrowthStageToAnimationClip clip, float progress)
@@ -73,5 +86,12 @@ namespace Unplants.Scripts.Gameplay.Planting.Plants
                 }
             }
         }
+
+        private void OnPointerDown(IPlantView item, IPointerData pointerData) => PointerDown?.Invoke(_model, pointerData);
+        private void OnPointerUp(IPlantView item, IPointerData pointerData) => PointerUp?.Invoke(_model, pointerData);
+        private void OnDragBegin(IPlantView item, IPointerData pointerData) => DragBegin?.Invoke(_model, pointerData);
+        private void OnDrag(IPlantView item, IPointerData pointerData) => Drag?.Invoke(_model, pointerData);
+        private void OnDragEnd(IPlantView item, IPointerData pointerData) => DragEnd?.Invoke(_model, pointerData);
+
     }
 }

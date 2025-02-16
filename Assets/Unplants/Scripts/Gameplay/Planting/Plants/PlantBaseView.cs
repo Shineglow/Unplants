@@ -12,11 +12,11 @@ namespace Unplants.Scripts.Gameplay.Planting.Plants
         [SerializeField] private SpriteRenderer mainSprite;
         [SerializeField] private new Animation animation;
 
-        public event Action<IDragDropItem, IPointerData> PointerDown;
-        public event Action<IDragDropItem, IPointerData> PointerUp;
-        public event Action<IDragDropItem, IPointerData> DragBegin;
-        public event Action<IDragDropItem, IPointerData> Drag;
-        public event Action<IDragDropItem, IPointerData> DragEnd;
+        public event Action<IPlantView, IPointerData> PointerDown;
+        public event Action<IPlantView, IPointerData> PointerUp;
+        public event Action<IPlantView, IPointerData> DragBegin;
+        public event Action<IPlantView, IPointerData> Drag;
+        public event Action<IPlantView, IPointerData> DragEnd;
 
         public bool IsVisible
         {
@@ -24,7 +24,7 @@ namespace Unplants.Scripts.Gameplay.Planting.Plants
             set => gameObject.SetActive(value);
         }
 
-        public Transform TransformAbstraction => transform;
+        public Transform Transform => transform;
 
         private PointerData _pointerData;
 
@@ -85,7 +85,7 @@ namespace Unplants.Scripts.Gameplay.Planting.Plants
 
         private void SetPointerDataValues(PointerEventData eventData)
         {
-            _pointerData.PointerPos = eventData.position;
+            _pointerData.PointerScreenPos = eventData.position;
             _pointerData.DisplayIndex = eventData.displayIndex;
         }
     }
