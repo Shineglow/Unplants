@@ -3,10 +3,11 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using Unplants.General.Systems.DragDropSystem;
 using Unplants.General.Systems.EventSystemAbstraction;
+using Unplants.Scripts.Data.InteractiveObjectsData.Plants;
 using Unplants.Scripts.Gameplay.Planting.Plants;
 using Unplants.Scripts.Gameplay.Systems;
 
-namespace Unplants
+namespace Unplants.Scripts.General
 {
     public class GameEntryPoint : MonoBehaviour
     {
@@ -17,12 +18,18 @@ namespace Unplants
         private DragDropSystemBase<IDragListener<IDragDropItem>, IDragDropItem> _dragDropSystem;
 
         [SerializeField] private List<PlantBaseView> draggablePlants;
+        [SerializeField] private PlantsConfigurationSO _plantsConfigurationSO;
+        private PlantsFactory _plantsFactory;
 
         void Start()
         {
             _raycaster2D = new RaycasterAbstractionBase(eventSystem, physics2DRaycaster);
             _dragDropSystem = new PlantDragDropSystem(_raycaster2D, Camera.main);
-            
+            _plantsFactory = new PlantsFactory(_plantsConfigurationSO, _plantsConfigurationSO.Prefab);
+            _plantsConfigurationSO.Init();
+
+            (IPlantModel model, PlantViewModel viewModel) = _plantsFactory.GetPlant(EPlant.Tomato);
+            _dragDropSystem.Add(viewModel);
         }
     }
 }

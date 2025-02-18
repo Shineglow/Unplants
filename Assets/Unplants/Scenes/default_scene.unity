@@ -380,6 +380,7 @@ MonoBehaviour:
   eventSystem: {fileID: 645853256}
   physics2DRaycaster: {fileID: 692623900}
   draggablePlants: []
+  _plantsConfigurationSO: {fileID: 11400000, guid: 35885639cafbec444aee07e8b5415bef, type: 2}
 --- !u!4 &1007001588
 Transform:
   m_ObjectHideFlags: 0

@@ -1,71 +1,64 @@
 ﻿using System.Collections.Generic;
 using Unity.Collections;
 using UnityEngine;
+using Unplants.Scripts.Gameplay.Planting.Plants;
 
 namespace Unplants.Scripts.Data.InteractiveObjectsData.Plants
 {
+    [CreateAssetMenu(fileName = "PlantsConfiguration", menuName = "Unplants/Configuration/PlantsConfiguration")]
     public class PlantsConfigurationSO : ScriptableObject, IPlantsConfiguration
     {
-        [SerializeField] private List<PlantSO> _plants;
-        private bool wasOrdered;
+        [field: SerializeField] public PlantBaseView Prefab { get; private set; }
+        [SerializeField] private List<PlantSO> plants;
+
+        public void Init()
+        {
+            ReorderPlantsConfiguration();
+        }
 
         public IPlantConfiguration GetPlantConfiguration(EPlant plant)
         {
-            ReorderPlantsConfiguration();
-            return _plants[(int)plant];
+            return plants[(int)plant];
         }
 
         private void ReorderPlantsConfiguration()
         {
-            if (wasOrdered) return;
-
             var count = (int)EPlant.Count;
-            if(_plants.Count < count)
+            if(plants.Count < count)
             {
-                _plants.Add(null);
+                while(plants.Count < count)
+                    plants.Add(null);
             }
-            else if (_plants.Count > count)
+            else if (plants.Count > count)
             {
-                for (int i = 0; i < _plants.Count; i++)
+                for (int i = 0; i < plants.Count; i++)
                 {
-                    if (_plants[i] == null)
+                    if (plants[i] == null)
                     {
-                        _plants.RemoveAtSwapBack(i);
+                        plants.RemoveAtSwapBack(i);
                     }
                 }
 
-                if (_plants.Count > count)
+                if (plants.Count > count)
                 {
                     Debug.LogError("plants has duplicates");
                 }
             }
 
-            for(int i = 0; i < _plants.Count; i++)
+            for(int i = 0; i < plants.Count; i++)
             {
-                var plantCfg = _plants[i];
+                var plantCfg = plants[i];
+                if (plantCfg == null || (int)plantCfg.PlantType == i) continue;
 
-                int indexOfConfiguration = (int)plantCfg.PlantType;
-                while (indexOfConfiguration != i)
+                if (plants[(int)plantCfg.PlantType]?.PlantType == plantCfg.PlantType)
                 {
-                    if(_plants[indexOfConfiguration] == null)
-                    {
-                        _plants[indexOfConfiguration] = _plants[i];
-                        break;
-                    }
-
-                    var cfgTmp = _plants[indexOfConfiguration];
-                    if(cfgTmp.PlantType == plantCfg.PlantType)
-                    {
-                        Debug.LogError("plants has duplicates");
-                        break;
-                    }
-                    _plants[indexOfConfiguration] = plantCfg;
-                    plantCfg = cfgTmp;
-                    indexOfConfiguration = (int)plantCfg.PlantType;
+                    Debug.LogError("plants has duplicates");
+                    continue;
                 }
+                
+                plants[i] = plants[(int)plantCfg.PlantType];
+                plants[(int)plantCfg.PlantType] = plantCfg;
             }
-
-            wasOrdered = true;
         }
     }
 }

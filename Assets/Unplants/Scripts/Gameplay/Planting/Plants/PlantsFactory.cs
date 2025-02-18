@@ -14,15 +14,21 @@ namespace Unplants.Scripts.Gameplay.Planting.Plants
             _viewPrefab = viewPrefab;
         }
 
-        public IPlantModel GetPlant(EPlant plantType)
+        public (IPlantModel model, PlantViewModel viewModel) GetPlant(EPlant plantType)
         {
             var plantConfig = _plantsConfiguration.GetPlantConfiguration(plantType);
+            if (plantConfig == null)
+            {
+                Debug.LogError($"Miss configuration of {plantType}!");
+                return (null, null);
+            }
+            
             var view = Object.Instantiate(_viewPrefab);
             PlantModel plantModel = new PlantModel(
                 plantConfig.InGameName, view.transform, 0, plantConfig.GrowthSpeed, plantConfig.TimeToGrowth, 0, 0);
-            _ = new PlantViewModel(view, plantModel, plantConfig);
+            var viewModel = new PlantViewModel(view, plantModel, plantConfig);
 
-            return new PlantModel();
+            return (plantModel, viewModel);
         }
     }
 }

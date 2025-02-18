@@ -14,7 +14,6 @@ namespace Unplants.Scripts.Gameplay.Planting.Plants
         private IPlantConfiguration _configuration;
 
         private readonly List<Func<IPlantConfiguration, float, bool>> _actions;
-        private readonly GrowthViewProgress _growthViewProgress;
 
         public event Action<IDragDropItem, IPointerData> PointerDown;
         public event Action<IDragDropItem, IPointerData> PointerUp;
@@ -32,7 +31,9 @@ namespace Unplants.Scripts.Gameplay.Planting.Plants
             _model = model;
             _configuration = configuration;
 
-            _growthViewProgress = new();
+            // _view.SetView(configuration.);
+            OnGrowthProgressUpdated(model.GrowthProgress.Value);
+            
             model.GrowthProgress.ValueChanged += OnGrowthProgressUpdated;
             _actions = new()
             {
@@ -48,24 +49,24 @@ namespace Unplants.Scripts.Gameplay.Planting.Plants
             view.DragEnd += OnDragEnd;
         }
 
-        private bool ProcessAnimationClip(IGrowthStageToAnimationClip clip, float progress)
+        private bool ProcessAnimationClip(IGrowthStageToAnimationClip stageToClip, float normalizedProgress)
         {
             return false;
             // TODO: Add realization, before first animation was added
         }
 
-        private bool ProcessSprite(IGrowthStageToSprite clip, float progress)
+        private bool ProcessSprite(IGrowthStageToSprite stageToSprite, float normalizedProgress)
         {
             return false;
             // TODO: Add realization, before first sprites set was added
         }
 
-        private bool ProcessColor(IGrowthStageToColorChange clip, float progress)
+        private bool ProcessColor(IGrowthStageToColorChange stageToColor, float normalizedProgress)
         {
-            for (int i = clip.StageToData.Count-1; i > -1; i--)
+            for (int i = stageToColor.StageToData.Count-1; i > -1; i--)
             {
-                GrowthStageToColorChange item = clip.StageToData[i];
-                if(item.GrowthStage <= progress)
+                GrowthStageToColorChange item = stageToColor.StageToData[i];
+                if(item.NormalizedGrowthStage <= normalizedProgress)
                 {
                     _view.SetView(item.Data);
                     return true;
@@ -80,7 +81,7 @@ namespace Unplants.Scripts.Gameplay.Planting.Plants
         {
             for (int i = 0; i < _actions.Count; i++)
             {
-                if (_actions[i].Invoke(_configuration, obj))
+                if (_actions[i].Invoke(_configuration, obj/_configuration.TimeToGrowth))
                 {
                     return;
                 }

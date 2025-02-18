@@ -8,7 +8,7 @@ namespace Unplants.Scripts.Data.InteractiveObjectsData.Plants
     [Serializable]
     public struct GrowthStageToSprite : IStageToData<IEnvironmentSpriteResource>
     {
-        [field: SerializeField] public float GrowthStage { get; private set; }
+        [field: SerializeField] public float NormalizedGrowthStage { get; private set; }
         public IEnvironmentSpriteResource Data => environmentSpriteResourceSO;
         [SerializeField] private EnvironmentSpriteResourceSO environmentSpriteResourceSO;
     }
@@ -16,7 +16,7 @@ namespace Unplants.Scripts.Data.InteractiveObjectsData.Plants
     [Serializable]
     public struct GrowthStageToAnimationClip : IStageToData<IEnvironmentAnimationResource>
     {
-        [field: SerializeField] public float GrowthStage { get; private set; }
+        [field: SerializeField] public float NormalizedGrowthStage { get; private set; }
         public IEnvironmentAnimationResource Data => environmentAnimationResourceSO;
         [SerializeField] private EnvironmentAnimationResourceSO environmentAnimationResourceSO;
     }
@@ -24,14 +24,14 @@ namespace Unplants.Scripts.Data.InteractiveObjectsData.Plants
     [Serializable]
     public struct GrowthStageToColorChange : IStageToData<Color>
     {
-        [field: SerializeField] public float GrowthStage { get; private set; }
+        [field: SerializeField][field: Range(0,1)] public float NormalizedGrowthStage { get; private set; }
         public Color Data => color;
         [SerializeField] private Color color;
     }
 
     public interface IStageToData<T>
     {
-        public float GrowthStage { get; }
+        public float NormalizedGrowthStage { get; }
         public T Data { get; }
     }
 }
