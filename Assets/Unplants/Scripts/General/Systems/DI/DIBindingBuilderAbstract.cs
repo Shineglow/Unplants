@@ -1,14 +1,11 @@
 using System;
 using Unplants.Scripts.General.Types;
 
-// using Unplants.Scripts.General.Types;
-
 namespace Unplants.General.Systems.Unplants.Scripts.General.Systems.DI
 {
     public abstract class DIBindingBuilderAbstract
     {
         protected DIRecord _record;
-        public event Action ChainEnded; 
 
         public DIRecord GetRecord()
         {
@@ -16,16 +13,19 @@ namespace Unplants.General.Systems.Unplants.Scripts.General.Systems.DI
             _record = new();
             return result;
         }
-
-        protected void EndChain()
-        {
-            ChainEnded?.Invoke();
-        }
     }
 
     public struct DIRecord
     {
         public InitializableValue<Type> Binding;
         public InitializableValue<Type> To;
+        public DIBindingParameters DIBindingParameters;
+    }
+    
+    public struct DIBindingParameters
+    {
+        public Type typeOfInstance;
+        public bool isSingle;
+        public bool createInstanceOnBind;
     }
 }

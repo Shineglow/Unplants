@@ -7,10 +7,23 @@ namespace Unplants.General.Systems.Unplants.Scripts.General.Systems.DI
             _record.Binding.Value = typeof(T);
         }
 
-        public void To<T1>() where T1 : T
+        public DIBindingBuilder<T> To<T1>() where T1 : T
         {
             _record.To.Value = typeof(T1);
-            EndChain();
+            _record.DIBindingParameters.typeOfInstance = typeof(T1);
+            return this;
+        }
+
+        public DIBindingBuilder<T> AsSingle()
+        {
+            _record.DIBindingParameters.isSingle = true;
+            return this;
+        }
+
+        public DIBindingBuilder<T> CreateOnBind()
+        {
+            _record.DIBindingParameters.createInstanceOnBind = true;
+            return this;
         }
     }
 }

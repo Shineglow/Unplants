@@ -1,49 +1,99 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace Unplants.General.Systems.Unplants.Scripts.General.Systems.DI
 {
-    public class DIContainerBase
+    public class DIContainer
     {
-        private Dictionary<Type, Type> _resolveDictionary = new(); // <binded, to>
+        private readonly DIContainer _parentContainer;
+        
+        private readonly Dictionary<Type, ResolveCache> _resolveDictionary = new(); // <binded, to>
         private DIBindingBuilderAbstract _bindingBuilderAbstract;
+
+        public DIContainer() : this(null){}
+        
+        public DIContainer(DIContainer parentContainer)
+        {
+            _parentContainer = parentContainer;
+        }
         
         public DIBindingBuilder<T> AddBinding<T>()
         {
             AddBinding();
             DIBindingBuilder<T> bindingBuilder = new DIBindingBuilder<T>();
             _bindingBuilderAbstract = bindingBuilder;
-            _bindingBuilderAbstract.ChainEnded += AddBinding;
             return bindingBuilder;
         }
 
         private void AddBinding()
         {
             if (_bindingBuilderAbstract == null) return;
-            _bindingBuilderAbstract.ChainEnded -= AddBinding;
             var record = _bindingBuilderAbstract.GetRecord();
             if (!record.To.WasInitialized)
             {
                 record.To.Value = record.Binding;
+                record.DIBindingParameters.typeOfInstance = record.Binding;
             }
-            _resolveDictionary.Add(record.Binding, record.To);
+            ResolveCache cache = new ResolveCache()
+            {
+                constructorInfo = record.To.Value.GetConstructors().First(i => i.IsPublic),
+                parameters = record.To.Value.GetConstructors().First(i => i.IsPublic).GetParameters(),
+                bindingParameters = record.DIBindingParameters,
+            };
+            _resolveDictionary.Add(record.Binding, cache);
             _bindingBuilderAbstract = null;
+            if (cache.bindingParameters is { isSingle: true, createInstanceOnBind: true })
+            {
+                cache.cachedInstance = Resolve(cache.bindingParameters.typeOfInstance);
+                _resolveDictionary[record.Binding] = cache;
+            }
         }
+        
         public T Resolve<T>() => (T)Resolve(typeof(T));
+        
         private object Resolve(Type typeToResolve)
         {
             AddBinding();
-            Type type = _resolveDictionary[typeToResolve];
-            var constructor = type.GetConstructors().First(i => i.IsPublic);
-            var parameters = constructor.GetParameters();
-            var resolvedParameters = new object[parameters.Length];
-            for (var i = 0; i < parameters.Length; i++)
+            object result;
+            if (_resolveDictionary.TryGetValue(typeToResolve, out var resolveCache))
             {
-                resolvedParameters[i] = Resolve(parameters[i].ParameterType);
+                if (resolveCache.bindingParameters.isSingle && resolveCache.cachedInstance != null)
+                {
+                    return resolveCache.cachedInstance;
+                }
+                
+                object[] resolvedParameters = new object[resolveCache.parameters.Length];
+                for (var i = 0; i < resolveCache.parameters.Length; i++)
+                {
+                    resolvedParameters[i] = Resolve(resolveCache.parameters[i].ParameterType);
+                }
+                result = resolveCache.constructorInfo.Invoke(resolvedParameters);
+                
+                if (resolveCache.bindingParameters.isSingle)
+                {
+                    resolveCache.cachedInstance = result;
+                    _resolveDictionary[typeToResolve] = resolveCache;
+                }
             }
-            var result = constructor.Invoke(resolvedParameters);
+            else if(_parentContainer != null)
+            {
+                result = _parentContainer.Resolve(typeToResolve);
+            }
+            else
+            {
+                throw new ArgumentException($"The container does not contain a bindings for the type {typeToResolve.FullName}");
+            }
             return result;
         }
+    }
+
+    public struct ResolveCache
+    {
+        public DIBindingParameters bindingParameters;
+        public ConstructorInfo constructorInfo;
+        public ParameterInfo[] parameters;
+        public object cachedInstance;
     }
 }
