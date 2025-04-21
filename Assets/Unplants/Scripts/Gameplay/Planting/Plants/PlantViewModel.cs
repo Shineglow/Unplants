@@ -79,6 +79,8 @@ namespace Unplants.Scripts.Gameplay.Planting.Plants
 
         private void OnGrowthProgressUpdated(float obj)
         {
+            if (_actions == null) return;
+            
             for (int i = 0; i < _actions.Count; i++)
             {
                 if (_actions[i].Invoke(_configuration, obj/_configuration.TimeToGrowth))

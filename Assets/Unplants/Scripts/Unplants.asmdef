@@ -3,7 +3,10 @@
     "rootNamespace": "Unplants",
     "references": [
         "Unity.Collections",
-        "Systems"
+        "Systems",
+        "Types",
+        "Gameplay",
+        "Data"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
