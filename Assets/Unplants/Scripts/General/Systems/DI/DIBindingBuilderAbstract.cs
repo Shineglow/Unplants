@@ -17,9 +17,10 @@ namespace Unplants.General.Systems.Unplants.Scripts.General.Systems.DI
 
     public struct DIRecord
     {
-        public InitializableValue<Type> Binding;
-        public InitializableValue<Type> To;
+        public Type Binding;
+        public Type To;
         public DIBindingParameters DIBindingParameters;
+        public object Instance;
     }
     
     public struct DIBindingParameters
@@ -27,5 +28,6 @@ namespace Unplants.General.Systems.Unplants.Scripts.General.Systems.DI
         public Type typeOfInstance;
         public bool isSingle;
         public bool createInstanceOnBind;
+        public bool asInstance;
     }
 }

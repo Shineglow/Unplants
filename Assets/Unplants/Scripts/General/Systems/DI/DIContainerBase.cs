@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Unplants.General.Systems.Assets.Unplants.Scripts.General.Systems.DI;
 
 namespace Unplants.General.Systems.Unplants.Scripts.General.Systems.DI
 {
@@ -19,7 +20,7 @@ namespace Unplants.General.Systems.Unplants.Scripts.General.Systems.DI
             _parentContainer = parentContainer;
         }
         
-        public DIBindingBuilder<T> AddBinding<T>()
+        public IDIBindingBuilder<T> AddBinding<T>()
         {
             AddBinding();
             DIBindingBuilder<T> bindingBuilder = new DIBindingBuilder<T>();
@@ -31,15 +32,15 @@ namespace Unplants.General.Systems.Unplants.Scripts.General.Systems.DI
         {
             if (_bindingBuilderAbstract == null) return;
             var record = _bindingBuilderAbstract.GetRecord();
-            if (!record.To.WasInitialized)
+            if (record.To != null)
             {
-                record.To.Value = record.Binding;
+                record.To = record.Binding;
                 record.DIBindingParameters.typeOfInstance = record.Binding;
             }
             ResolveCache cache = new ResolveCache()
             {
-                constructorInfo = record.To.Value.GetConstructors().First(i => i.IsPublic),
-                parameters = record.To.Value.GetConstructors().First(i => i.IsPublic).GetParameters(),
+                constructorInfo = record.To.GetConstructors().First(i => i.IsPublic),
+                parameters = record.To.GetConstructors().First(i => i.IsPublic).GetParameters(),
                 bindingParameters = record.DIBindingParameters,
             };
             _resolveDictionary.Add(record.Binding, cache);
