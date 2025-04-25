@@ -2,20 +2,19 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Unplants.General.Systems.Assets.Unplants.Scripts.General.Systems.DI;
 
-namespace Unplants.General.Systems.Unplants.Scripts.General.Systems.DI
+namespace Unplants.Scripts.General.Systems.DI
 {
-    public class DIContainer
+    public class DIContainerBase
     {
-        private readonly DIContainer _parentContainer;
+        private readonly DIContainerBase _parentContainer;
         
         private readonly Dictionary<Type, ResolveCache> _resolveDictionary = new(); // <binded, to>
         private DIBindingBuilderAbstract _bindingBuilderAbstract;
 
-        public DIContainer() : this(null){}
+        public DIContainerBase() : this(null){}
         
-        public DIContainer(DIContainer parentContainer)
+        public DIContainerBase(DIContainerBase parentContainer)
         {
             _parentContainer = parentContainer;
         }

@@ -1,7 +1,7 @@
 using System;
 using Unplants.Scripts.General.Types;
 
-namespace Unplants.General.Systems.Unplants.Scripts.General.Systems.DI
+namespace Unplants.Scripts.General.Systems.DI
 {
     public abstract class DIBindingBuilderAbstract
     {

@@ -1,6 +1,4 @@
-using Unplants.General.Systems.Assets.Unplants.Scripts.General.Systems.DI;
-
-namespace Unplants.General.Systems.Unplants.Scripts.General.Systems.DI
+namespace Unplants.Scripts.General.Systems.DI
 {
     public class DIBindingBuilder<T> : DIBindingBuilderAbstract, IDIBindingBuilder<T>, IBindAsSingle<T>, ICreateOnBind<T>
     {

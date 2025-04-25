@@ -1,6 +1,4 @@
-﻿using Unplants.General.Systems.Unplants.Scripts.General.Systems.DI;
-
-namespace Unplants.General.Systems.Assets.Unplants.Scripts.General.Systems.DI
+﻿namespace Unplants.Scripts.General.Systems.DI
 {
     public interface IBindTo<T>
     {
