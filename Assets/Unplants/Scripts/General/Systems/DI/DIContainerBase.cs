@@ -21,29 +21,32 @@ namespace Unplants.Scripts.General.Systems.DI
         
         public IDIBindingBuilder<T> AddBinding<T>()
         {
-            AddBinding();
+            EndBinding();
             DIBindingBuilder<T> bindingBuilder = new DIBindingBuilder<T>();
             _bindingBuilderAbstract = bindingBuilder;
             return bindingBuilder;
         }
 
-        private void AddBinding()
+        private void EndBinding()
         {
             if (_bindingBuilderAbstract == null) return;
             var record = _bindingBuilderAbstract.GetRecord();
-            if (record.To != null)
+            _bindingBuilderAbstract = null;
+            if (record.DIBindingParameters.typeOfInstance == null)
             {
-                record.To = record.Binding;
                 record.DIBindingParameters.typeOfInstance = record.Binding;
             }
+
+            ConstructorInfo constructorInfo = record.DIBindingParameters.typeOfInstance.GetConstructors().First(i => i.IsPublic);
             ResolveCache cache = new ResolveCache()
             {
-                constructorInfo = record.To.GetConstructors().First(i => i.IsPublic),
-                parameters = record.To.GetConstructors().First(i => i.IsPublic).GetParameters(),
+                constructorInfo = constructorInfo,
+                parameters = constructorInfo.GetParameters(),
                 bindingParameters = record.DIBindingParameters,
+                cachedInstance = record.DIBindingParameters.asInstance ? record.Instance : null,
             };
+
             _resolveDictionary.Add(record.Binding, cache);
-            _bindingBuilderAbstract = null;
             if (cache.bindingParameters is { isSingle: true, createInstanceOnBind: true })
             {
                 cache.cachedInstance = Resolve(cache.bindingParameters.typeOfInstance);
@@ -55,7 +58,7 @@ namespace Unplants.Scripts.General.Systems.DI
         
         private object Resolve(Type typeToResolve)
         {
-            AddBinding();
+            EndBinding();
             object result;
             if (_resolveDictionary.TryGetValue(typeToResolve, out var resolveCache))
             {

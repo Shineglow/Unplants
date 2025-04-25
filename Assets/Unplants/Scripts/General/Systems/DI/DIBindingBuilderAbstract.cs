@@ -18,7 +18,6 @@ namespace Unplants.Scripts.General.Systems.DI
     public struct DIRecord
     {
         public Type Binding;
-        public Type To;
         public DIBindingParameters DIBindingParameters;
         public object Instance;
     }

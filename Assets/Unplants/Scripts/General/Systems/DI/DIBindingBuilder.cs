@@ -9,7 +9,6 @@ namespace Unplants.Scripts.General.Systems.DI
 
         IBindAsSingle<T> IBindTo<T>.To<T1>()
         {
-            _record.To = typeof(T1);
             _record.DIBindingParameters.typeOfInstance = typeof(T1);
             return this;
         }

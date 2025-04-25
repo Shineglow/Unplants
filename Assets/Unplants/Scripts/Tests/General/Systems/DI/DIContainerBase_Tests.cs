@@ -9,8 +9,8 @@ namespace Unplants.Scripts.Tests.General.Systems.DI
         public void DIContainerBase_SimpleBind()
         {
             DIContainerBase container = new DIContainerBase();
-            container.AddBinding<DITest2>();
-            DITest2 result = container.Resolve<DITest2>();
+            container.AddBinding<DITest>();
+            DITest result = container.Resolve<DITest>();
             Assert.NotNull(result);
         }
         
