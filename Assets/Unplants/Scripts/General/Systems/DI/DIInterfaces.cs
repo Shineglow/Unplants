@@ -19,4 +19,10 @@
     {
         void AsInstance<T1>(T1 instance) where T1 : T;
     }
+
+    public enum EMultipleBindingParameters
+    {
+        OverridePreviousBindings,
+        SkipPreviousBindings,
+    }
 }

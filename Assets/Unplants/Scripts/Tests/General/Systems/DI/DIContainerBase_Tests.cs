@@ -8,8 +8,8 @@ namespace Unplants.Scripts.Tests.General.Systems.DI
         [Test]
         public void DIContainerBase_SimpleBind()
         {
-            DIContainerBase container = new DIContainerBase();
-            container.AddBinding<DITest>();
+            DIContainer container = new DIContainer();
+            container.Bind<DITest>();
             DITest result = container.Resolve<DITest>();
             Assert.NotNull(result);
         }
@@ -17,8 +17,8 @@ namespace Unplants.Scripts.Tests.General.Systems.DI
         [Test]
         public void DIContainerBase_BindToBaseClasses()
         {
-            DIContainerBase container = new DIContainerBase();
-            container.AddBinding<IDITest>().To<DITest>();
+            DIContainer container = new DIContainer();
+            container.Bind<IDITest>().To<DITest>();
             IDITest result = container.Resolve<IDITest>();
             Assert.NotNull(result);
         }
@@ -26,23 +26,23 @@ namespace Unplants.Scripts.Tests.General.Systems.DI
         [Test]
         public void DIContainerBase_InvalidBindingWithoutTypeSpecification()
         {
-            DIContainerBase container = new DIContainerBase();
-            container.AddBinding<IDITest>();
+            DIContainer container = new DIContainer();
+            container.Bind<IDITest>();
             Assert.Catch(() => container.Resolve<IDITest>());
         }
 
         [Test]
         public void DIContainerBase_ExceptionOnInvalidResolve()
         {
-            DIContainerBase container = new DIContainerBase();
+            DIContainer container = new DIContainer();
             Assert.Catch(() => container.Resolve<IDITest>());
         }
         
         [Test]
         public void DIContainerBase_DifferentInstancesOnResolve()
         {
-            DIContainerBase container = new DIContainerBase();
-            container.AddBinding<IDITest>().To<DITest>();
+            DIContainer container = new DIContainer();
+            container.Bind<IDITest>().To<DITest>();
             IDITest result1 = container.Resolve<IDITest>();
             IDITest result2 = container.Resolve<IDITest>();
             Assert.IsFalse(ReferenceEquals(result1, result2));
@@ -51,8 +51,8 @@ namespace Unplants.Scripts.Tests.General.Systems.DI
         [Test]
         public void DIContainerBase_CacheSingleInstance()
         {
-            DIContainerBase container = new DIContainerBase();
-            container.AddBinding<IDITest>().To<DITest>().AsSingle();
+            DIContainer container = new DIContainer();
+            container.Bind<IDITest>().To<DITest>().AsSingle();
             IDITest result1 = container.Resolve<IDITest>();
             IDITest result2 = container.Resolve<IDITest>();
             Assert.IsTrue(ReferenceEquals(result1, result2));
@@ -61,9 +61,9 @@ namespace Unplants.Scripts.Tests.General.Systems.DI
         [Test]
         public void DIContainerBase_ResolveForComplexConstructor()
         {
-            DIContainerBase container = new DIContainerBase();
-            container.AddBinding<IDITest>().To<DITest>().AsSingle();
-            container.AddBinding<DITest2>();
+            DIContainer container = new DIContainer();
+            container.Bind<IDITest>().To<DITest>().AsSingle();
+            container.Bind<DITest2>();
             DITest2 result = container.Resolve<DITest2>();
             IDITest result2 = container.Resolve<IDITest>();
             Assert.IsTrue(result.I == result2.I);
@@ -72,14 +72,45 @@ namespace Unplants.Scripts.Tests.General.Systems.DI
         [Test]
         public void DIContainerBase_ResolveForComplexConstructorFromParentContainer()
         {
-            DIContainerBase container1 = new DIContainerBase();
-            DIContainerBase container2 = new DIContainerBase(container1);
-            container1.AddBinding<IDITest>().To<DITest>().AsSingle();
-            container2.AddBinding<DITest2>();
+            DIContainer container1 = new DIContainer();
+            DIContainer container2 = new DIContainer(container1);
+            container1.Bind<IDITest>().To<DITest>().AsSingle();
+            container2.Bind<DITest2>();
             DITest2 result = container2.Resolve<DITest2>();
             Assert.NotNull(result);
         }
-        
+
+        [Test]
+        public void DIContainerBase_ResolveRfomInstanceBinding()
+        {
+            DIContainer container = new DIContainer();
+            DITest diTest1 = new DITest();
+            container.Bind<DITest>().AsInstance(diTest1);
+            DITest diTest2 = container.Resolve<DITest>();
+            Assert.IsTrue(diTest2 != null);
+        }
+
+        [Test]
+        public void DIContainerBase_ResolveRfomInstanceBindingCachingInstance()
+        {
+            DIContainer container = new DIContainer();
+            DITest diTest1 = new DITest();
+            container.Bind<DITest>().AsInstance(diTest1);
+            DITest diTest2 = container.Resolve<DITest>();
+            DITest diTest3 = container.Resolve<DITest>();
+            Assert.IsTrue(diTest2 == diTest3);
+        }
+
+        [Test]
+        public void DIContainerBase_ResolveRfomInstanceBindingCachingOfOriginalInstance()
+        {
+            DIContainer container = new DIContainer();
+            DITest diTest1 = new DITest();
+            container.Bind<DITest>().AsInstance(diTest1);
+            DITest diTest2 = container.Resolve<DITest>();
+            Assert.IsTrue(diTest1 == diTest2);
+        }
+
 
         #region TestEntities
 
