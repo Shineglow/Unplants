@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Unplants.Scripts.General.Systems.DI;
 
 namespace Unplants.Scripts.General.Systems.DI
 {
@@ -11,21 +7,22 @@ namespace Unplants.Scripts.General.Systems.DI
     {
         private Type _cachedType;
         private Type[] _interfaces;
-        private bool _bindToSelf;
+        private bool _bindSelf;
         private DIRecord _recordPrototype;
 
-        public DIBindingBuilderMultipleBindings(bool bindToSelf)
+        public DIBindingBuilderMultipleBindings(bool bindSelf)
         {
             _cachedType = typeof(T);
             _interfaces = _cachedType.GetInterfaces();
-            _bindToSelf = bindToSelf;
-            records = new DIRecord[_interfaces.Length + (_bindToSelf ? 1 : 0)];
+            _bindSelf = bindSelf;
+            records = new DIRecord[_interfaces.Length + (_bindSelf ? 1 : 0)];
             _recordPrototype = new DIRecord()
             {
                 DIBindingParameters = new DIBindingParameters()
                 {
                     typeOfInstance = _cachedType,
                 },
+                InstanceReference = new(),
             };
         }
 
@@ -36,7 +33,7 @@ namespace Unplants.Scripts.General.Systems.DI
             {
                 records[i].Binding = _interfaces[i];
             }
-            if(_bindToSelf)
+            if(_bindSelf)
             {
                 records[^1].Binding = _cachedType;
             }
@@ -45,7 +42,8 @@ namespace Unplants.Scripts.General.Systems.DI
 
         public void AsInstance<T1>(T1 instance) where T1 : T
         {
-            _recordPrototype.Instance = instance;
+            _recordPrototype.DIBindingParameters.asInstance = true;
+            _recordPrototype.InstanceReference.Instance = instance;
         }
 
         public ICreateOnBind<T> AsSingle()

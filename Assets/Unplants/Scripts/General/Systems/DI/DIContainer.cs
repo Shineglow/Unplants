@@ -10,6 +10,7 @@ namespace Unplants.Scripts.General.Systems.DI
         private readonly DIContainer _parentContainer;
         
         private readonly Dictionary<Type, ResolveCache> _resolveDictionary = new(); // <binded, to>
+        private readonly Dictionary<Type, object> _instanceCaches = new(); // <type, instance>
         private DIBindingBuilderAbstract _bindingBuilderAbstract;
         private DIBindingBuilderMultipleBindingsAbstract _bindingBuilderMultiAbstract;
 
@@ -41,16 +42,10 @@ namespace Unplants.Scripts.General.Systems.DI
             if (_bindingBuilderAbstract != null)
             {
                 EndSingleBinding();
-                _bindingBuilderAbstract = null;
             }
             else if (_bindingBuilderMultiAbstract != null)
             {
                 EndMultipleBindings();
-                _bindingBuilderMultiAbstract = null;
-            }
-            else
-            {
-                throw new InvalidOperationException("There is no data to complete the binding. All builders is null!");
             }
         }
 
@@ -60,7 +55,10 @@ namespace Unplants.Scripts.General.Systems.DI
                 return;
             var records = _bindingBuilderMultiAbstract.GetRecords();
             _bindingBuilderMultiAbstract = null;
-
+            foreach (var record in records)
+            {
+                RecordToBinding(record);
+            }
         }
 
         private void EndSingleBinding()
@@ -69,10 +67,12 @@ namespace Unplants.Scripts.General.Systems.DI
                 return;
             var record = _bindingBuilderAbstract.GetRecord();
             _bindingBuilderAbstract = null;
-            if (record.DIBindingParameters.typeOfInstance == null)
-            {
-                record.DIBindingParameters.typeOfInstance = record.Binding;
-            }
+            RecordToBinding(record);
+        }
+
+        private void RecordToBinding(DIRecord record)
+        {
+            record.DIBindingParameters.typeOfInstance ??= record.Binding;
 
             ConstructorInfo constructorInfo = record.DIBindingParameters.typeOfInstance.GetConstructors().First(i => i.IsPublic);
             ResolveCache cache = new ResolveCache()
@@ -80,14 +80,15 @@ namespace Unplants.Scripts.General.Systems.DI
                 constructorInfo = constructorInfo,
                 parameters = constructorInfo.GetParameters(),
                 bindingParameters = record.DIBindingParameters,
-                cachedInstance = record.DIBindingParameters.asInstance ? record.Instance : null,
             };
-
             _resolveDictionary.Add(record.Binding, cache);
-            if (cache.bindingParameters is { isSingle: true, createInstanceOnBind: true })
+            if (record.DIBindingParameters.asInstance && !_instanceCaches.ContainsKey(cache.bindingParameters.typeOfInstance))
             {
-                cache.cachedInstance = Resolve(cache.bindingParameters.typeOfInstance);
-                _resolveDictionary[record.Binding] = cache;
+                _instanceCaches[cache.bindingParameters.typeOfInstance] = record.InstanceReference.Instance;
+            }
+            else if (cache.bindingParameters is { isSingle: true, createInstanceOnBind: true })
+            {
+                _instanceCaches[cache.bindingParameters.typeOfInstance] = Resolve(cache.bindingParameters.typeOfInstance);
             }
         }
 
@@ -99,9 +100,10 @@ namespace Unplants.Scripts.General.Systems.DI
             object result;
             if (_resolveDictionary.TryGetValue(typeToResolve, out var resolveCache))
             {
-                if (resolveCache.bindingParameters.isSingle && resolveCache.cachedInstance != null)
+                if ((resolveCache.bindingParameters.isSingle || resolveCache.bindingParameters.asInstance) 
+                    && _instanceCaches.TryGetValue(resolveCache.bindingParameters.typeOfInstance, out result))
                 {
-                    return resolveCache.cachedInstance;
+                    return result;
                 }
                 
                 object[] resolvedParameters = new object[resolveCache.parameters.Length];
@@ -109,12 +111,11 @@ namespace Unplants.Scripts.General.Systems.DI
                 {
                     resolvedParameters[i] = Resolve(resolveCache.parameters[i].ParameterType);
                 }
-                result = resolveCache.constructorInfo.Invoke(resolvedParameters);
                 
+                result = resolveCache.constructorInfo.Invoke(resolvedParameters);
                 if (resolveCache.bindingParameters.isSingle)
                 {
-                    resolveCache.cachedInstance = result;
-                    _resolveDictionary[typeToResolve] = resolveCache;
+                    _instanceCaches[resolveCache.bindingParameters.typeOfInstance] = result;
                 }
             }
             else if(_parentContainer != null)
@@ -134,6 +135,10 @@ namespace Unplants.Scripts.General.Systems.DI
         public DIBindingParameters bindingParameters;
         public ConstructorInfo constructorInfo;
         public ParameterInfo[] parameters;
-        public object cachedInstance;
+    }
+
+    public class CachedInstanceReference
+    {
+        public object Instance;
     }
 }

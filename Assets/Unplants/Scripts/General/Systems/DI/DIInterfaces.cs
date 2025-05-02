@@ -2,7 +2,7 @@
 {
     public interface IBindTo<T>
     {
-        IBindAsSingle<T> To<T1>() where T1 : T;
+        IBindAs<T> To<T1>() where T1 : T;
     }
 
     public interface IBindAsSingle<T>

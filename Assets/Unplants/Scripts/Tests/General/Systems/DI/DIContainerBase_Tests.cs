@@ -81,7 +81,7 @@ namespace Unplants.Scripts.Tests.General.Systems.DI
         }
 
         [Test]
-        public void DIContainerBase_ResolveRfomInstanceBinding()
+        public void DIContainerBase_ResolveFromInstanceBinding()
         {
             DIContainer container = new DIContainer();
             DITest diTest1 = new DITest();
@@ -91,7 +91,7 @@ namespace Unplants.Scripts.Tests.General.Systems.DI
         }
 
         [Test]
-        public void DIContainerBase_ResolveRfomInstanceBindingCachingInstance()
+        public void DIContainerBase_ResolveFromInstanceBindingCachingInstance()
         {
             DIContainer container = new DIContainer();
             DITest diTest1 = new DITest();
@@ -102,13 +102,44 @@ namespace Unplants.Scripts.Tests.General.Systems.DI
         }
 
         [Test]
-        public void DIContainerBase_ResolveRfomInstanceBindingCachingOfOriginalInstance()
+        public void DIContainerBase_ResolveFromInstanceBindingCachingOfOriginalInstance()
         {
             DIContainer container = new DIContainer();
             DITest diTest1 = new DITest();
             container.Bind<DITest>().AsInstance(diTest1);
             DITest diTest2 = container.Resolve<DITest>();
             Assert.IsTrue(diTest1 == diTest2);
+        }
+
+        [Test]
+        public void DIContainerBase_ResolveManyTypesFromSingleBinding()
+        {
+            DIContainer container = new DIContainer();
+            container.BindToInterfacesAndSelf<DITest>();
+            var result1 = container.Resolve<IDITest>();
+            var result2 = container.Resolve<DITest>();
+            Assert.IsTrue(result1 != null && result2 != null);
+        }
+        
+        [Test]
+        public void DIContainerBase_ResolveManyTypesFromSingleInstance()
+        {
+            DIContainer container = new DIContainer();
+            container.BindToInterfacesAndSelf<DITest>().AsSingle();
+            var result1 = container.Resolve<IDITest>();
+            var result2 = container.Resolve<DITest>();
+            Assert.IsTrue(ReferenceEquals(result1, result2));
+        }
+        
+        [Test]
+        public void DIContainerBase_ResolveManyTypesFromInstanceBindingCachingOfOriginalInstance()
+        {
+            DIContainer container = new DIContainer();
+            DITest diTest1 = new DITest();
+            container.BindToInterfacesAndSelf<DITest>().AsInstance(diTest1);
+            var result1 = container.Resolve<IDITest>();
+            var result2 = container.Resolve<DITest>();
+            Assert.IsTrue(ReferenceEquals(diTest1,result1) && ReferenceEquals(diTest1,result2));
         }
 
 

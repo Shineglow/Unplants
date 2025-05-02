@@ -19,7 +19,12 @@ namespace Unplants.Scripts.General.Systems.DI
     {
         public Type Binding;
         public DIBindingParameters DIBindingParameters;
-        public object Instance;
+
+        public CachedInstanceReference InstanceReference
+        {
+            get;
+            set;
+        }
     }
     
     public struct DIBindingParameters

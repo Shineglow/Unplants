@@ -5,9 +5,10 @@ namespace Unplants.Scripts.General.Systems.DI
         public DIBindingBuilder()
         {
             _record.Binding = typeof(T);
+            _record.InstanceReference = new();
         }
 
-        IBindAsSingle<T> IBindTo<T>.To<T1>()
+        IBindAs<T> IBindTo<T>.To<T1>()
         {
             _record.DIBindingParameters.typeOfInstance = typeof(T1);
             return this;
@@ -15,7 +16,7 @@ namespace Unplants.Scripts.General.Systems.DI
 
         void IBindAsInstance<T>.AsInstance<T1>(T1 instance)
         {
-            _record.Instance = instance;
+            _record.InstanceReference.Instance = instance;
             _record.DIBindingParameters.asInstance = true;
         }
 
