@@ -7,9 +7,11 @@ namespace Unplants.Scripts.General.Systems.DI
         protected DIContainer container;
         protected virtual EInstallBindingMethod installMethod => EInstallBindingMethod.Awake;
 
-        public DIMonoInstaller()
+        public DIMonoInstaller() : this((DIContainer)null) { }
+        public DIMonoInstaller(DIMonoInstaller parentInstaller) : this(parentInstaller.container) { }
+        public DIMonoInstaller(DIContainer parentContainer)
         {
-            container = new DIContainer();
+            container = new DIContainer(parentContainer);
             CallInstallBinding(EInstallBindingMethod.Constructor);
         }
 
@@ -27,10 +29,15 @@ namespace Unplants.Scripts.General.Systems.DI
 
         private void CallInstallBinding(EInstallBindingMethod methodName)
         {
-            if (installMethod == EInstallBindingMethod.Constructor)
+            if (installMethod == methodName)
             {
                 InstallBindings();
             }
+        }
+
+        public void ResolveInstance<T>(T instance)
+        {
+
         }
     }
 
