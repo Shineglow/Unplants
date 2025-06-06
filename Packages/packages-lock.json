@@ -1,5 +1,14 @@
 {
   "dependencies": {
+    "com.shineglow.di": {
+      "version": "https://github.com/Shineglow/DiFrameworkLight.git?path=Packages/com.shineglow.di#main",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.test-framework": "1.1.33"
+      },
+      "hash": "7929e525b61e27a5d5c16ff00f0060a6467301e2"
+    },
     "com.unity.2d.animation": {
       "version": "9.1.3",
       "depth": 1,

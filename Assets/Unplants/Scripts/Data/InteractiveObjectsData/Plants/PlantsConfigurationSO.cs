@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using Unity.Collections;
-using Unplants.General.Systems.Assets.Unplants.Scripts.General.Systems.DI;
 
 namespace Unplants.Scripts.Data.InteractiveObjectsData.Plants
 {
     [CreateAssetMenu(fileName = "PlantsConfiguration", menuName = "Unplants/Configuration/PlantsConfiguration")]
-    public class PlantsConfigurationSO : ScriptableObject, IPlantsConfiguration, IInitializable
+    public class PlantsConfigurationSO : ScriptableObject, IPlantsConfiguration
     {
         [SerializeField] private List<PlantSO> plants;
 
