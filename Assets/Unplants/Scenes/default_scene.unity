@@ -377,6 +377,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fea26604190362644b7d7f769771156d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  plantsConfiguration: {fileID: 11400000, guid: 35885639cafbec444aee07e8b5415bef, type: 2}
+  plantView: {fileID: 2669983492695607182, guid: 100cd061c4108274e84c03fdb8e5ec31, type: 3}
+  unityRaycaster: {fileID: 692623900}
 --- !u!4 &1007001588
 Transform:
   m_ObjectHideFlags: 0

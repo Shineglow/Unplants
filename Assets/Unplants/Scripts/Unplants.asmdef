@@ -6,7 +6,8 @@
         "Systems",
         "Types",
         "Gameplay",
-        "Data"
+        "Data",
+        "Framework"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
