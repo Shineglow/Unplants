@@ -1,0 +1,21 @@
+{
+    "name": "Unplants",
+    "rootNamespace": "Unplants",
+    "references": [
+        "Unity.Collections",
+        "Systems",
+        "Types",
+        "Gameplay",
+        "Data",
+        "Framework"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
